@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframe.example.book.dao.BookDAO">
+
+    <resultMap id="bookResultMap" type="egovframe.example.book.service.BookVO">
+        <id property="bookId" column="BOOK_ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="author" column="AUTHOR"/>
+        <result property="publisher" column="PUBLISHER"/>
+        <result property="price" column="PRICE"/>
+        <result property="publishedDate" column="PUBLISHED_DATE"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="regDate" column="REG_DATE"/>
+        <result property="updDate" column="UPD_DATE"/>
+        <result property="deleteYn" column="DELETE_YN"/>
+    </resultMap>
+
+    <select id="selectBookList" resultMap="bookResultMap">
+        SELECT BOOK_ID, TITLE, AUTHOR, PUBLISHER, PRICE, PUBLISHED_DATE, DESCRIPTION,
+               REG_DATE, UPD_DATE, DELETE_YN
+        FROM BOOK
+        WHERE DELETE_YN = 'N'
+        ORDER BY REG_DATE DESC
+    </select>
+
+    <select id="selectBookDetail" resultMap="bookResultMap">
+        SELECT BOOK_ID, TITLE, AUTHOR, PUBLISHER, PRICE, PUBLISHED_DATE, DESCRIPTION,
+               REG_DATE, UPD_DATE, DELETE_YN
+        FROM BOOK
+        WHERE BOOK_ID = #{bookId}
+    </select>
+
+    <insert id="insertBook" parameterType="egovframe.example.book.service.BookVO">
+        INSERT INTO BOOK (
+            BOOK_ID, TITLE, AUTHOR, PUBLISHER, PRICE, PUBLISHED_DATE, DESCRIPTION,
+            REG_DATE, UPD_DATE, DELETE_YN
+        ) VALUES (
+            #{bookId}, #{title}, #{author}, #{publisher}, #{price}, #{publishedDate}, #{description},
+            NOW(), NOW(), #{deleteYn}
+        )
+    </insert>
+
+    <update id="updateBook" parameterType="egovframe.example.book.service.BookVO">
+        UPDATE BOOK
+        SET TITLE = #{title},
+            AUTHOR = #{author},
+            PUBLISHER = #{publisher},
+            PRICE = #{price},
+            PUBLISHED_DATE = #{publishedDate},
+            DESCRIPTION = #{description},
+            UPD_DATE = NOW()
+        WHERE BOOK_ID = #{bookId}
+    </update>
+
+    <delete id="deleteBook">
+        UPDATE BOOK
+        SET DELETE_YN = 'Y',
+            UPD_DATE = NOW()
+        WHERE BOOK_ID = #{bookId}
+    </delete>
+
+</mapper>
