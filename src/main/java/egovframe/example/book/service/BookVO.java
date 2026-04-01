@@ -1,19 +1,17 @@
 package egovframe.example.book.service;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class BookVO {
+
     private String bookId;
     private String title;
     private String author;
     private String publisher;
     private Integer price;
-    private java.sql.Date publishedDate;
+    private Integer pageCount;
     private String description;
     private Timestamp regDate;
-    private Timestamp updDate;
-    private String deleteYn;
 
     public String getBookId() {
         return bookId;
@@ -55,12 +53,12 @@ public class BookVO {
         this.price = price;
     }
 
-    public java.sql.Date getPublishedDate() {
-        return publishedDate;
+    public Integer getPageCount() {
+        return pageCount;
     }
 
-    public void setPublishedDate(java.sql.Date publishedDate) {
-        this.publishedDate = publishedDate;
+    public void setPageCount(Integer pageCount) {
+        this.pageCount = pageCount;
     }
 
     public String getDescription() {
@@ -79,19 +77,17 @@ public class BookVO {
         this.regDate = regDate;
     }
 
-    public Timestamp getUpdDate() {
-        return updDate;
-    }
-
-    public void setUpdDate(Timestamp updDate) {
-        this.updDate = updDate;
-    }
-
-    public String getDeleteYn() {
-        return deleteYn;
-    }
-
-    public void setDeleteYn(String deleteYn) {
-        this.deleteYn = deleteYn;
+    @Override
+    public String toString() {
+        return "BookVO{" +
+                "bookId='" + bookId + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", price=" + price +
+                ", pageCount=" + pageCount +
+                ", description='" + description + '\'' +
+                ", regDate=" + regDate +
+                '}';
     }
 }

@@ -10,10 +10,13 @@
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <!-- Component Scan for Controllers -->
     <context:component-scan base-package="egovframe.example.*.web"/>
 
+    <!-- Validator for Bean Validation -->
     <bean id="beanValidator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
+    <!-- Annotation Driver -->
     <mvc:annotation-driven validator="beanValidator">
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
@@ -23,6 +26,7 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <!-- View Resolver for JSP -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>

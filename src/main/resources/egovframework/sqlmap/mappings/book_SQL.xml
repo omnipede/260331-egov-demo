@@ -4,61 +4,49 @@
 
 <mapper namespace="egovframe.example.book.dao.BookDAO">
 
-    <resultMap id="bookResultMap" type="egovframe.example.book.service.BookVO">
-        <id property="bookId" column="BOOK_ID"/>
-        <result property="title" column="TITLE"/>
-        <result property="author" column="AUTHOR"/>
-        <result property="publisher" column="PUBLISHER"/>
-        <result property="price" column="PRICE"/>
-        <result property="publishedDate" column="PUBLISHED_DATE"/>
-        <result property="description" column="DESCRIPTION"/>
-        <result property="regDate" column="REG_DATE"/>
-        <result property="updDate" column="UPD_DATE"/>
-        <result property="deleteYn" column="DELETE_YN"/>
-    </resultMap>
-
-    <select id="selectBookList" resultMap="bookResultMap">
-        SELECT BOOK_ID, TITLE, AUTHOR, PUBLISHER, PRICE, PUBLISHED_DATE, DESCRIPTION,
-               REG_DATE, UPD_DATE, DELETE_YN
+    <!-- 도서 목록 조회 -->
+    <select id="selectBookList" resultType="egovframe.example.book.service.BookVO">
+        SELECT BOOK_ID, TITLE, AUTHOR, PUBLISHER, PRICE, PAGE_COUNT, DESCRIPTION, REG_DATE
         FROM BOOK
         WHERE DELETE_YN = 'N'
         ORDER BY REG_DATE DESC
     </select>
 
-    <select id="selectBookDetail" resultMap="bookResultMap">
-        SELECT BOOK_ID, TITLE, AUTHOR, PUBLISHER, PRICE, PUBLISHED_DATE, DESCRIPTION,
-               REG_DATE, UPD_DATE, DELETE_YN
+    <!-- 도서 상세 조회 -->
+    <select id="selectBookDetail" parameterType="string" resultType="egovframe.example.book.service.BookVO">
+        SELECT BOOK_ID, TITLE, AUTHOR, PUBLISHER, PRICE, PAGE_COUNT, DESCRIPTION, REG_DATE
         FROM BOOK
         WHERE BOOK_ID = #{bookId}
+        AND DELETE_YN = 'N'
     </select>
 
+    <!-- 도서 등록 -->
     <insert id="insertBook" parameterType="egovframe.example.book.service.BookVO">
-        INSERT INTO BOOK (
-            BOOK_ID, TITLE, AUTHOR, PUBLISHER, PRICE, PUBLISHED_DATE, DESCRIPTION,
-            REG_DATE, UPD_DATE, DELETE_YN
-        ) VALUES (
-            #{bookId}, #{title}, #{author}, #{publisher}, #{price}, #{publishedDate}, #{description},
-            NOW(), NOW(), #{deleteYn}
-        )
+        INSERT INTO BOOK (BOOK_ID, TITLE, AUTHOR, PUBLISHER, PRICE, PAGE_COUNT, DESCRIPTION, REG_DATE, DELETE_YN)
+        VALUES (#{bookId}, #{title}, #{author}, #{publisher}, #{price}, #{pageCount}, #{description}, NOW(), 'N')
     </insert>
 
+    <!-- 도서 수정 -->
     <update id="updateBook" parameterType="egovframe.example.book.service.BookVO">
         UPDATE BOOK
         SET TITLE = #{title},
             AUTHOR = #{author},
             PUBLISHER = #{publisher},
             PRICE = #{price},
-            PUBLISHED_DATE = #{publishedDate},
+            PAGE_COUNT = #{pageCount},
             DESCRIPTION = #{description},
             UPD_DATE = NOW()
         WHERE BOOK_ID = #{bookId}
+        AND DELETE_YN = 'N'
     </update>
 
-    <delete id="deleteBook">
+    <!-- 도서 삭제 (로직 삭제) -->
+    <delete id="deleteBook" parameterType="string">
         UPDATE BOOK
         SET DELETE_YN = 'Y',
             UPD_DATE = NOW()
         WHERE BOOK_ID = #{bookId}
+        AND DELETE_YN = 'N'
     </delete>
 
 </mapper>

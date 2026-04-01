@@ -888,8 +888,11 @@ public class BookDAO extends EgovAbstractMapper {
 # 컴파일
 mvn clean compile
 
-# 실행 (Jetty)
-mvn jetty:run
+# 실행 (Jetty - 백그라운드 실행, 로그 파일 기록)
+lsof -ti:8080 | xargs kill -9 2>/dev/null; mvn jetty:run > jetty.log 2>&1 &
+
+# API 테스트 (10 초 대기 후)
+sleep 10 && curl -s http://localhost:8080/demo/api/books | head -100
 
 # WAR 빌드
 mvn clean package
@@ -918,9 +921,8 @@ mvn clean compile
 ### 2. Jetty 실행
 
 ```bash
-mvn jetty:run &
-sleep 20
-curl -s http://localhost:8080/
+lsof -ti:8080 | xargs kill -9 2>/dev/null; mvn jetty:run > jetty.log 2>&1 &
+sleep 10 && curl -s http://localhost:8080/
 # 200 OK 또는 JSP 응답 확인
 ```
 
@@ -939,6 +941,32 @@ curl -s http://localhost:8080/
 "Initializing Spring DispatcherServlet 'dispatcher'"
 # 오류 없음 확인
 ```
+
+---
+
+## ⚡ Server Execution Guidelines
+
+**중요:** 서버 실행 시 무한 대기하지 말고 백그라운드에서 실행하세요.
+
+### 올바른 서버 실행 방법
+
+```bash
+# 1. 기존 프로세스 종료
+lsof -ti:8080 | xargs kill -9 2>/dev/null
+
+# 2. 백그라운드 실행 (로그 파일 기록)
+mvn jetty:run > jetty.log 2>&1 &
+
+# 3. 10 초 대기 후 API 테스트 (절대 sleep 시간을 늘리지 마세요)
+sleep 10 && curl -s http://localhost:8080/demo/api/books
+```
+
+### 주의사항
+
+- ❌ `mvn jetty:run` 만 실행하지 마세요 (터미널이 블락됨)
+- ✅ 항상 `> jetty.log 2>&1 &` 로 백그라운드 실행
+- ✅ sleep 시간은 **10 초로 고정** (늘리지 마세요)
+- ✅ API 테스트는 `sleep 10 && curl ...` 한 줄로 실행
 
 ---
 

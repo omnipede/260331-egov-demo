@@ -1,4 +1,4 @@
-package egovframe.example.book.config;
+package egovframe.example.config;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
